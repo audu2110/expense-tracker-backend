@@ -30,7 +30,8 @@ app.post('/post-signup',async (req,res,next)=>{
         var email=req.body.email;
         var password=req.body.password;
         const data= await User.create({name:name, email:email, password:password})
-        res.status(201).json({newExpenseDetail:data})
+        // res.status(201).json({newExpenseDetail:data})
+        res.status(201).json({message: 'Successfuly create new user'})
     }
     catch(err){
         // res.sendFile(path.join(__dirname,'views','index.html'))
@@ -43,6 +44,38 @@ app.post('/post-signup',async (req,res,next)=>{
 
 app.get('/get-login',(req,res,next)=>{
     res.sendFile(path.join(__dirname,'views','login.html'))
+})
+
+app.post('/post-login',async (req,res,next)=>{
+    try{
+        var email=req.body.email;
+        var password=req.body.password;
+        const user  = await User.findAll({ where : { email }})
+        console.log(user[0].email);
+        console.log(user[0].password);
+        if(user.length>0){
+            if(user[0].email===email && user[0].password===password){
+                return res.status(200).json({success: true, message: "User logged in successfully"})
+            }
+            else if(user[0].password!=password){
+                return res.status(400).json({success: false, message: 'Password is incorrect'})
+            }
+            else{
+                return res.status(400).json({success: false, message: 'Something went wrong'})
+            }
+        }
+        else{
+            return res.status(404).json({success: false, message: 'User Doesnot exitst'})
+        }
+        // res.status(201).json({message: 'User logged in successfully'})
+    }
+    catch(err){
+        // res.sendFile(path.join(__dirname,'views','index.html'))
+        // res.send("Email Aldready exists")
+        res.status(500).json({
+            error:"User not found"
+        })
+    }
 })
 
 const adminRoutes = require('./routes/admin');

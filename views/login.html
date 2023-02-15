@@ -104,16 +104,22 @@
     <div class="register-photo">
         <div class="form-container">
             <div class="image-holder"></div>
-            <form action="/post-signup" method="post">
+            <form action="/post-login" method="post">
                 <h2 class="text-center">Login</h2>
                 <div class="form-group"><input class="form-control" type="email" name="email" placeholder="Email" required></div>
                 <div class="form-group"><input class="form-control" type="password" name="password" minlength="6" placeholder="Password" required></div>
                 
                 
                 <div class="form-group"><button class="btn btn-primary btn-block" type="submit">Login</button></div>
+                
                 <div>
-                    <a href="/get-signup" class="already">New User? Sign Up </a>
+                  <!-- New User? <a href="/get-signup">Sign Up</a> -->
+                  <a href="/get-signup" class="already">New User? Sign Up </a>
                 </div>
+                <!-- <p class="form-group">
+                  New User? <a href="/get-signup">Sign Up</a> 
+               </p> -->
+                
                 </form>
         </div>
     </div>
