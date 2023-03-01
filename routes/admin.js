@@ -4,6 +4,7 @@ const express = require('express');
 
 const adminController = require('../controllers/admin');
 const router = express.Router();
+const userAuth=require('../middleware/auth');
 const Expense = require('../models/expense');
 
 
@@ -12,12 +13,13 @@ router.use(bodyParser.json())
 router.use(bodyParser.urlencoded({ extended: true }));
 
 
+router.get('/download',userAuth.authenticate, adminController.downloadExpense)
 
-router.post('/add-expense',adminController.postAddExpense)
+router.post('/add-expense',userAuth.authenticate ,adminController.postAddExpense)
 
-router.get('/get-expenses', adminController.getExpenses)
+router.get('/get-expenses',userAuth.authenticate ,adminController.getExpenses)
 
-router.delete('/delete-expense/:id',adminController.deleteExpense)
+router.delete('/delete-expense/:id',userAuth.authenticate ,adminController.deleteExpense)
 
 module.exports = router;
 
