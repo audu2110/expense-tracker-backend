@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken')
 const bodyParser = require('body-parser');
 router.use(bodyParser.json())
 router.use(bodyParser.urlencoded({ extended: true }));
+require("dotenv").config();
 
 
 const User = require('../models/user');
@@ -38,7 +39,7 @@ exports.postSignup=async (req,res,next)=>{
 // }
 
 const generateAccessToken = (id, name, ispremiumuser) => {
-    return jwt.sign({ userId : id, name: name, ispremiumuser } ,'secretkey');
+    return jwt.sign({ userId : id, name: name, ispremiumuser } ,process.env.TOKEN_SECRET);
 }
 
 exports.postLogin=async (req,res,next)=>{

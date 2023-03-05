@@ -30,7 +30,7 @@ exports.purchasepremium =async (req, res) => {
 }
 
 const generateAccessToken = (id, name, ispremiumuser) => {
-    return jwt.sign({ userId : id, name: name, ispremiumuser } ,'secretkey');
+    return jwt.sign({ userId : id, name: name, ispremiumuser } ,process.env.TOKEN_SECRET);
 }
 
 exports.updateTransactionStatus = async (req, res ) => {

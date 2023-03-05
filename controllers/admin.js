@@ -96,17 +96,54 @@ exports.postAddExpense= async (req,res,next)=>{
     }
 }
 
-exports.getExpenses= (req, res,next)=> {
+exports.getExpenses= async(req, res,next)=> {
+    const ITEMS_PER_PAGE=5;
+    const page=+ req.query.page ||1;
+    let totalExp;
+    console.log("req====>",req.user.id)
+    // Expense.findAll({ where : { userId: req.user.id}}).then(expenses => {
+    //     console.log("req====>",req.user.id)
+    //     console.log(expenses)
+    //     return res.status(200).json({allExpenses:expenses, success: true})
+    // })
+    // .catch(err => {
+    //     console.log(err)
+    //     return res.status(500).json({ error: err, success: false})
+    // })
     
-    Expense.findAll({ where : { userId: req.user.id}}).then(expenses => {
-        console.log("req====>",req.user.id)
-        console.log(expenses)
-        return res.status(200).json({allExpenses:expenses, success: true})
+    // Expense.count()
+    // .then((total)=>{
+    //     totalExp=total;
+    //     return Expense.findAll({ where : { userId: req.user.id},
+    //         offset: (page-1)*ITEMS_PER_PAGE,
+    //         limit: ITEMS_PER_PAGE
+    // })
+    // })
+
+    const {count,rows}=await Expense.findAndCountAll({ where : { userId: req.user.id},
+        offset: (page-1)*ITEMS_PER_PAGE,
+        limit: ITEMS_PER_PAGE
     })
-    .catch(err => {
-        console.log(err)
-        return res.status(500).json({ error: err, success: false})
-    })
+
+    console.log("count======>",count)
+    console.log("expenses======>",rows)
+    totalExp=count;
+    res.status(200).json({allExpenses:rows, currentPage:page, hasNextPage: ITEMS_PER_PAGE*page<totalExp, nextPage:page+1, hasPreviousPage: page>1, previousPage: page-1, lastPage: Math.ceil(totalExp/ITEMS_PER_PAGE)})
+    // Expense.findAndCountAll({ where : { userId: req.user.id},
+    //             offset: (page-1)*ITEMS_PER_PAGE,
+    //             limit: ITEMS_PER_PAGE
+    //     })
+    //     .then((data)=>{
+    //         const {count,expenses}=data;
+    //         console.log("count>>>>",count);
+    //         totalExp=count;
+    //         console.log("expenses======>",expenses);
+    //         res.status(200).json({allExpenses:expenses, currentPage:page, hasNextPage: ITEMS_PER_PAGE*page<totalExp, nextPage:page+1, hasPreviousPage: page>1, previousPage: page-1, lastPage: Math.ceil(totalExp/ITEMS_PER_PAGE)})
+    //     })
+    // .then((expenses)=>{
+    //     console.log("hbvhsvgvgsghsvs=>",totalExp);
+    //     res.status(200).json({allExpenses:expenses, currentPage:page, hasNextPage: ITEMS_PER_PAGE*page<totalExp, nextPage:page+1, hasPreviousPage: page>1, previousPage: page-1, lastPage: Math.ceil(totalExp/ITEMS_PER_PAGE)})
+    // })
 }
 
 exports.deleteExpense = async(req,res,next)=>{
