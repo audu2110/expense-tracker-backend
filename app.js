@@ -19,6 +19,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
+
 const adminRoutes = require('./routes/admin');
 app.use('/admin', adminRoutes);
 
@@ -58,7 +59,5 @@ sequelize.sync()
 .catch(err=>{
     console.log(err);
 })
-
-
 
 app.listen(5000);

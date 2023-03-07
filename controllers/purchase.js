@@ -10,7 +10,7 @@ exports.purchasepremium =async (req, res) => {
             key_id: process.env.RAZORPAY_KEY_ID,
             key_secret: process.env.RAZORPAY_KEY_SECRET
         })
-        const amount = 2500;
+        const amount = 3000;
 
         rzp.orders.create({amount, currency: "INR"}, (err, order) => {
             if(err) {
@@ -41,7 +41,7 @@ exports.updateTransactionStatus = async (req, res ) => {
         console.log(userName)
         const { payment_id, order_id} = req.body;
         console.log("payment_id=====>",payment_id)
-        const order  = await Order.findOne({where : {orderid : order_id}}) //2
+        const order  = await Order.findOne({where : {orderid : order_id}}) 
         const promise1 =  order.update({ paymentid: payment_id, status: 'SUCCESSFUL'}) 
         const promise2 =  req.user.update({ ispremiumuser: true }) 
 

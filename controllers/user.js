@@ -11,9 +11,6 @@ require("dotenv").config();
 
 const User = require('../models/user');
 
-// exports.getSignup=(req,res,next)=>{
-//     res.sendFile(path.join(__dirname,"../",'views','index.html'))
-// }
 
 exports.postSignup=async (req,res,next)=>{
     try{
@@ -34,9 +31,7 @@ exports.postSignup=async (req,res,next)=>{
     }
 }
 
-// exports.getLogin=(req,res,next)=>{
-//     res.sendFile(path.join(__dirname,"../",'views','login.html'))
-// }
+
 
 const generateAccessToken = (id, name, ispremiumuser) => {
     return jwt.sign({ userId : id, name: name, ispremiumuser } ,process.env.TOKEN_SECRET);

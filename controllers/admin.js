@@ -8,13 +8,12 @@ const AWS=require('aws-sdk')
 const jwt = require('jsonwebtoken')
 const bodyParser = require('body-parser');
 const User = require('../models/user');
-// const { Sequelize } = require('sequelize');
+
 require("dotenv").config();
 const sequelize=require('../util/database');
-const { resolve } = require('path');
-const { rejects } = require('assert');
+
 router.use(bodyParser.json())
-// router.use(bodyParser.urlencoded({ extended: true }));
+
 
 
 function uploadToS3(data,filename){
@@ -101,24 +100,6 @@ exports.getExpenses= async(req, res,next)=> {
     const page=+ req.query.page ||1;
     let totalExp;
     console.log("req====>",req.user.id)
-    // Expense.findAll({ where : { userId: req.user.id}}).then(expenses => {
-    //     console.log("req====>",req.user.id)
-    //     console.log(expenses)
-    //     return res.status(200).json({allExpenses:expenses, success: true})
-    // })
-    // .catch(err => {
-    //     console.log(err)
-    //     return res.status(500).json({ error: err, success: false})
-    // })
-    
-    // Expense.count()
-    // .then((total)=>{
-    //     totalExp=total;
-    //     return Expense.findAll({ where : { userId: req.user.id},
-    //         offset: (page-1)*ITEMS_PER_PAGE,
-    //         limit: ITEMS_PER_PAGE
-    // })
-    // })
 
     const {count,rows}=await Expense.findAndCountAll({ where : { userId: req.user.id},
         offset: (page-1)*ITEMS_PER_PAGE,
@@ -129,34 +110,17 @@ exports.getExpenses= async(req, res,next)=> {
     console.log("expenses======>",rows)
     totalExp=count;
     res.status(200).json({allExpenses:rows, currentPage:page, hasNextPage: ITEMS_PER_PAGE*page<totalExp, nextPage:page+1, hasPreviousPage: page>1, previousPage: page-1, lastPage: Math.ceil(totalExp/ITEMS_PER_PAGE)})
-    // Expense.findAndCountAll({ where : { userId: req.user.id},
-    //             offset: (page-1)*ITEMS_PER_PAGE,
-    //             limit: ITEMS_PER_PAGE
-    //     })
-    //     .then((data)=>{
-    //         const {count,expenses}=data;
-    //         console.log("count>>>>",count);
-    //         totalExp=count;
-    //         console.log("expenses======>",expenses);
-    //         res.status(200).json({allExpenses:expenses, currentPage:page, hasNextPage: ITEMS_PER_PAGE*page<totalExp, nextPage:page+1, hasPreviousPage: page>1, previousPage: page-1, lastPage: Math.ceil(totalExp/ITEMS_PER_PAGE)})
-    //     })
-    // .then((expenses)=>{
-    //     console.log("hbvhsvgvgsghsvs=>",totalExp);
-    //     res.status(200).json({allExpenses:expenses, currentPage:page, hasNextPage: ITEMS_PER_PAGE*page<totalExp, nextPage:page+1, hasPreviousPage: page>1, previousPage: page-1, lastPage: Math.ceil(totalExp/ITEMS_PER_PAGE)})
-    // })
+
 }
 
 exports.deleteExpense = async(req,res,next)=>{
     try{
         const uId=req.params.id;
         console.log(uId);
-        // const totalExpense=Number(req.user.totalExpenses)+Number(amount)
         console.log("totexpense=====>",req.user.totalExpenses);
         const delData=await Expense.findByPk(uId).then(delexpense=>{
             return delexpense.dataValues.amount
-            // console.log("delexpense===>",delexpense.dataValues.amount);  
         })
-        // console.log("totexpense=====>",delData);
         let delTotExpense=Number(req.user.totalExpenses)-Number(delData);
         console.log("delTotExpense====>",delTotExpense)
         await User.update({totalExpenses:delTotExpense},{where:{id:req.user.id}})

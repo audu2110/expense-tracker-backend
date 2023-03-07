@@ -9,11 +9,11 @@ const userController = require('../controllers/user');
 
 const User = require('../models/user');
 
-// router.get('/get-signup',userController.getSignup)
+
 
 router.post('/signup',userController.postSignup)
 
-// router.get('/get-login',userController.getLogin)
+
 
 router.post('/login',userController.postLogin)
 
